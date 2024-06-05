@@ -92,6 +92,7 @@ func (r *InfraClusterController) reconcile(ctx context.Context) (ctrl.Result, er
 	default:
 		klog.Infof("detected platform %q is not supported, skipping capi controllers setup", r.Platform)
 	}
+
 	return ctrl.Result{}, nil
 }
 
