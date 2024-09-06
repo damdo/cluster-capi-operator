@@ -46,7 +46,10 @@ require (
 	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20240531134648-6636df17d67b
 )
 
-require sigs.k8s.io/yaml v1.4.0
+require (
+	github.com/go-test/deep v1.1.1
+	sigs.k8s.io/yaml v1.4.0
+)
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect

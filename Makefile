@@ -36,7 +36,7 @@ operator:
 	go build -o bin/cluster-capi-operator cmd/cluster-capi-operator/main.go
 
 unit:
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path --bin-dir $(PROJECT_DIR)/bin --remote-bucket openshift-kubebuilder-tools --use-deprecated-gcs)" ./hack/test.sh "./pkg/... ./assets/..." 5m
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path --bin-dir $(PROJECT_DIR)/bin --remote-bucket openshift-kubebuilder-tools --use-deprecated-gcs)" ./hack/test.sh "./pkg/mapi2capi/... ./pkg/capi2mapi/..." 5m
 
 .PHONY: e2e
 e2e:
