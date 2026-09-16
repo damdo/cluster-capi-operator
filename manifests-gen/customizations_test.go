@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/base64"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -73,18 +72,14 @@ func TestManagementKubeconfigSecretValue(t *testing.T) {
 		t.Fatalf("reading Secret manifest: %v", err)
 	}
 	var secret struct {
-		Data struct {
+		StringData struct {
 			Value string `yaml:"value"`
-		} `yaml:"data"`
+		} `yaml:"stringData"`
 	}
 	if err := yaml.Unmarshal(manifest, &secret); err != nil {
 		t.Fatalf("decoding Secret manifest: %v", err)
 	}
-	value, err := base64.StdEncoding.DecodeString(secret.Data.Value)
-	if err != nil {
-		t.Fatalf("decoding Secret data.value: %v", err)
-	}
-	kubeconfig, err := clientcmd.Load(value)
+	kubeconfig, err := clientcmd.Load([]byte(secret.StringData.Value))
 	if err != nil {
 		t.Fatalf("loading kubeconfig: %v", err)
 	}
