@@ -66,7 +66,7 @@ func TestManagementKubeconfigSecretValue(t *testing.T) {
 	if !ok {
 		t.Fatal("runtime.Caller failed")
 	}
-	manifestPath := filepath.Join(filepath.Dir(thisFile), "..", "ocp-manifests-input", "kubeconfig", "management-cluster-kubeconfig-secret.yaml")
+	manifestPath := filepath.Join(filepath.Dir(thisFile), "..", "ocp-manifests-input", "default", "management-cluster-kubeconfig-secret.yaml")
 	manifest, err := os.ReadFile(manifestPath)
 	if err != nil {
 		t.Fatalf("reading Secret manifest: %v", err)
