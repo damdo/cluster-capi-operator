@@ -260,34 +260,6 @@ var _ = Describe("RevisionController", Serial, func() {
 		Expect(co.Status.Versions).To(BeEmpty())
 	}, defaultNodeTimeout)
 
-	It("creates a new revision when InfrastructureName changes", func(ctx context.Context) {
-		initial := &operatorv1alpha1.ClusterAPI{}
-		Expect(cl.Get(ctx, client.ObjectKey{Name: "cluster"}, initial)).To(Succeed())
-		Expect(initial.Status.Revisions).To(HaveLen(1))
-		initialContentID := initial.Status.Revisions[0].ContentID
-
-		Expect(kWithCtx(ctx).UpdateStatus(infra, func() {
-			infra.Status.InfrastructureName = "changed-infra"
-		})()).To(Succeed())
-
-		Eventually(kWithCtx(ctx).Object(clusterAPI)).WithContext(ctx).
-			Should(HaveField("Status.Revisions", HaveLen(2)))
-		latest := latestRevision(clusterAPI.Status.Revisions)
-		Expect(latest.ContentID).NotTo(Equal(initialContentID))
-
-		infrastructureName := func() string {
-			for _, substitution := range latest.ManifestSubstitutions {
-				if substitution.Key == "INFRASTRUCTURE_NAME" {
-					return *substitution.Value
-				}
-			}
-
-			return ""
-		}()
-
-		Expect(infrastructureName).To(Equal("changed-infra"))
-	}, defaultNodeTimeout)
-
 	It("creates revision with empty components when no providers match the platform", func(ctx context.Context) {
 		// Stop manager with default (matching) providers
 		mgr.stop()

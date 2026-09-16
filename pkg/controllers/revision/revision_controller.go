@@ -338,8 +338,7 @@ func (r *RevisionController) SetupWithManager(mgr ctrl.Manager, tlsOptions []fun
 					if !oldOK || !newOK || !isInfrastructureReady(newInfra) {
 						return false
 					}
-					// Enqueue when becoming ready or when the infrastructure name changes.
-					return !isInfrastructureReady(oldInfra) || oldInfra.Status.InfrastructureName != newInfra.Status.InfrastructureName
+					return !isInfrastructureReady(oldInfra)
 				},
 			}),
 		).
