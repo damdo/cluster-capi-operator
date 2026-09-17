@@ -46,7 +46,7 @@ This SA also binds to ClusterRole `system:openshift:openshift-cluster-api:read-t
 ## Revision installer RBAC
 
 The revision installer manages the generated management kubeconfig Secret.
-See [Revision installer](controllers/revision-installer.md) for the Secret
+See [Management kubeconfig Secret](management-kubeconfig.md) for the Secret
 lifecycle and projected-token design.
 
 The installer’s Secret permissions are separate from the runtime permissions
