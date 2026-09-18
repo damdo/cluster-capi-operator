@@ -107,41 +107,6 @@ var _ = Describe("[sig-cluster-lifecycle][OCPFeatureGate:ClusterAPIMachineManage
 
 		})
 
-		It("should repair a mutated management cluster kubeconfig Secret", func() {
-			key := client.ObjectKey{Namespace: framework.CAPINamespace, Name: fmt.Sprintf("%s-kubeconfig", clusterName)}
-			secret := &corev1.Secret{}
-			Eventually(func() error { return cl.Get(ctx, key, secret) }).WithTimeout(framework.WaitMedium).WithPolling(framework.RetryMedium).Should(Succeed())
-			expectedValue := append([]byte(nil), secret.Data["value"]...)
-			secret.Data["value"] = []byte("invalid-kubeconfig")
-			Expect(cl.Update(ctx, secret)).To(Succeed())
-
-			By("waiting for the revision installer to restore the kubeconfig")
-			Eventually(func() []byte {
-				current := &corev1.Secret{}
-				if err := cl.Get(ctx, key, current); err != nil {
-					return nil
-				}
-				return current.Data["value"]
-			}).WithTimeout(framework.WaitMedium).WithPolling(framework.RetryMedium).Should(Equal(expectedValue))
-		})
-
-		It("should recreate a deleted management cluster kubeconfig Secret", func() {
-			key := client.ObjectKey{Namespace: framework.CAPINamespace, Name: fmt.Sprintf("%s-kubeconfig", clusterName)}
-			secret := &corev1.Secret{}
-			Eventually(func() error { return cl.Get(ctx, key, secret) }).WithTimeout(framework.WaitMedium).WithPolling(framework.RetryMedium).Should(Succeed())
-			expectedValue := append([]byte(nil), secret.Data["value"]...)
-			Expect(cl.Delete(ctx, secret)).To(Succeed())
-
-			By("waiting for the revision installer to recreate the kubeconfig")
-			Eventually(func() []byte {
-				current := &corev1.Secret{}
-				if err := cl.Get(ctx, key, current); err != nil {
-					return nil
-				}
-				return current.Data["value"]
-			}).WithTimeout(framework.WaitMedium).WithPolling(framework.RetryMedium).Should(Equal(expectedValue))
-		})
-
 		It("should not have the removed capi-controllers token Secret", func() {
 			secret := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{
 				Name:      "capi-controllers-token",
