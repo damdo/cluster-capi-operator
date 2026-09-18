@@ -56,7 +56,7 @@ func TestProcessObjectsSecretFiltering(t *testing.T) {
 	}
 }
 
-func TestProcessObjectsDoesNotMutateNamespaceBehavior(t *testing.T) {
+func TestProcessObjectsDoesNotEmitNamespace(t *testing.T) {
 	namespace := &unstructured.Unstructured{}
 	namespace.SetAPIVersion("v1")
 	namespace.SetKind("Namespace")
