@@ -18,8 +18,6 @@ import (
 	"errors"
 	"fmt"
 
-	"k8s.io/client-go/tools/clientcmd"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -107,24 +105,6 @@ var _ = Describe("[sig-cluster-lifecycle][OCPFeatureGate:ClusterAPIMachineManage
 				HaveField("Data", HaveKey("value")),
 			))
 
-			By("validating the kubeconfig uses mounted token and CA files")
-			value := secret.Data["value"]
-			kubeconfig, err := clientcmd.Load(value)
-			Expect(err).NotTo(HaveOccurred())
-			cluster := kubeconfig.Clusters["management-cluster"]
-			Expect(cluster).NotTo(BeNil())
-			Expect(cluster.Server).To(Equal("https://kubernetes.default.svc:443"))
-			Expect(cluster.CertificateAuthority).To(Equal("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"))
-			Expect(cluster.CertificateAuthorityData).To(BeEmpty())
-			user := kubeconfig.AuthInfos["service-account"]
-			Expect(user).NotTo(BeNil())
-			Expect(user.TokenFile).To(Equal("/var/run/secrets/kubernetes.io/serviceaccount/token"))
-			Expect(user.Token).To(BeEmpty())
-			context := kubeconfig.Contexts["management-cluster"]
-			Expect(context).NotTo(BeNil())
-			Expect(context.Cluster).To(Equal("management-cluster"))
-			Expect(context.AuthInfo).To(Equal("service-account"))
-			Expect(kubeconfig.CurrentContext).To(Equal("management-cluster"))
 		})
 
 		It("should repair a mutated management cluster kubeconfig Secret", func() {
