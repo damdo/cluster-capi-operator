@@ -1031,7 +1031,6 @@ spec:
           secretName: capi-controllers-metrics-tls
 status: {}
 ---
-# This Secret contains only static connection data; consumers use their own projected ServiceAccount token and CA files.
 apiVersion: v1
 kind: Secret
 metadata:
