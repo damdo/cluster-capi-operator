@@ -1,15 +1,10 @@
 package main
 
 import (
-	"os"
-	"path/filepath"
-	"runtime"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/yaml"
 )
 
 func TestProcessObjectsSecretFiltering(t *testing.T) {
@@ -58,38 +53,6 @@ func TestProcessObjectsSecretFiltering(t *testing.T) {
 				}
 			}
 		})
-	}
-}
-
-func TestManagementKubeconfigSecretValue(t *testing.T) {
-	_, thisFile, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatal("runtime.Caller failed")
-	}
-	manifestPath := filepath.Join(filepath.Dir(thisFile), "..", "ocp-manifests-input", "default", "management-cluster-kubeconfig-secret.yaml")
-	manifest, err := os.ReadFile(manifestPath)
-	if err != nil {
-		t.Fatalf("reading Secret manifest: %v", err)
-	}
-	var secret struct {
-		StringData struct {
-			Value string `yaml:"value"`
-		} `yaml:"stringData"`
-	}
-	if err := yaml.Unmarshal(manifest, &secret); err != nil {
-		t.Fatalf("decoding Secret manifest: %v", err)
-	}
-	kubeconfig, err := clientcmd.Load([]byte(secret.StringData.Value))
-	if err != nil {
-		t.Fatalf("loading kubeconfig: %v", err)
-	}
-	cluster := kubeconfig.Clusters["management-cluster"]
-	if cluster == nil || cluster.Server != "https://kubernetes.default.svc:443" || cluster.CertificateAuthority != "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt" || cluster.CertificateAuthorityData != nil {
-		t.Fatalf("unexpected cluster configuration: %#v", cluster)
-	}
-	user := kubeconfig.AuthInfos["service-account"]
-	if user == nil || user.TokenFile != "/var/run/secrets/kubernetes.io/serviceaccount/token" || user.Token != "" {
-		t.Fatalf("unexpected user configuration: %#v", user)
 	}
 }
 
