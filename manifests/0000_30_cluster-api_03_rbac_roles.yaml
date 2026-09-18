@@ -54,9 +54,8 @@ metadata:
     release.openshift.io/feature-gate: "ClusterAPIMachineManagement"
     capability.openshift.io/name: ClusterAPI
   name: openshift-capi-manager-local-cluster
-# TODO: Evaluate moving this local-cluster RBAC into openshift/cluster-api so
-# the CAPI manager owns the permissions required by OpenShift's local
-# ClusterCache optimization.
+# TODO(OCPCLOUD-1501): Remove this role after the equivalent OpenShift overlay
+# resource in openshift/cluster-api is available in the consumed manifests.
 rules:
 # CAPI normally uses a workload-cluster identity for Node access. On
 # OpenShift, ClusterCache detects the local cluster and switches to the
@@ -185,10 +184,12 @@ metadata:
     capability.openshift.io/name: ClusterAPI
   name: openshift-capi-kubeconfig-consumers
   namespace: openshift-cluster-api
+# TODO(OCPCLOUD-1501): Remove this role after the equivalent OpenShift overlay
+# resource in openshift/cluster-api is available in the consumed manifests.
 # CAPI ClusterCache uses the management kubeconfig to identify the local
 # controller Pod before switching to in-cluster configuration. Keep this
-# permission separate from the broader legacy capi-controllers Role because
-# projected tokens authenticate as each consumer's own ServiceAccount.
+# permission separate because projected tokens authenticate as each consumer's
+# own ServiceAccount.
 rules:
 - apiGroups:
   - ""

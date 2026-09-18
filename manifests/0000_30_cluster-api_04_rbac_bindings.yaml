@@ -22,6 +22,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: openshift-capi-manager-local-cluster
+# TODO(OCPCLOUD-1501): Remove this binding after the equivalent OpenShift
+# overlay resource in openshift/cluster-api is available in the consumed
+# manifests.
   annotations:
     exclude.release.openshift.io/internal-openshift-hosted: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -41,6 +44,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: openshift-capi-manager-core-rolebinding
+# TODO(OCPCLOUD-1501): Remove this binding after the equivalent OpenShift
+# overlay resource in openshift/cluster-api is available in the consumed
+# manifests.
   annotations:
     exclude.release.openshift.io/internal-openshift-hosted: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -81,6 +87,9 @@ kind: RoleBinding
 metadata:
   name: openshift-capi-kubeconfig-consumers
   namespace: openshift-cluster-api
+# TODO(OCPCLOUD-1501): Remove this binding after the equivalent OpenShift
+# overlay resource in openshift/cluster-api is available in the consumed
+# manifests.
   annotations:
     exclude.release.openshift.io/internal-openshift-hosted: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
