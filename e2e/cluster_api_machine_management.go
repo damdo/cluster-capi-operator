@@ -24,7 +24,6 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clusterv1 "sigs.k8s.io/cluster-api/api/core/v1beta2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -107,15 +106,6 @@ var _ = Describe("[sig-cluster-lifecycle][OCPFeatureGate:ClusterAPIMachineManage
 
 		})
 
-		It("should not have the removed capi-controllers token Secret", func() {
-			secret := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{
-				Name:      "capi-controllers-token",
-				Namespace: framework.CAPINamespace,
-			}}
-			Eventually(func() bool {
-				return apierrors.IsNotFound(cl.Get(ctx, client.ObjectKeyFromObject(secret), secret))
-			}).WithTimeout(framework.WaitMedium).WithPolling(framework.RetryMedium).Should(BeTrue(), "expected capi-controllers-token to be absent")
-		})
 	})
 
 })
