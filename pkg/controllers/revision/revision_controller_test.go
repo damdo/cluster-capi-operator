@@ -605,13 +605,20 @@ var _ = Describe("RevisionController manifest substitutions", Serial, func() {
 		Expect(updatedClusterAPI.Status.Revisions).To(HaveLen(1))
 
 		rev := updatedClusterAPI.Status.Revisions[0]
-		Expect(rev.ManifestSubstitutions).To(HaveLen(3))
-		Expect(rev.ManifestSubstitutions[0].Key).To(Equal("INFRASTRUCTURE_NAME"))
-		Expect(*rev.ManifestSubstitutions[0].Value).To(Equal("test-infra"))
-		Expect(rev.ManifestSubstitutions[1].Key).To(Equal("TLS_CIPHER_SUITES"))
-		Expect(*rev.ManifestSubstitutions[1].Value).To(Equal("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"))
-		Expect(rev.ManifestSubstitutions[2].Key).To(Equal("TLS_MIN_VERSION"))
-		Expect(*rev.ManifestSubstitutions[2].Value).To(Equal("VersionTLS12"))
+		Expect(rev.ManifestSubstitutions).To(ConsistOf(
+			SatisfyAll(
+				HaveField("Key", Equal("INFRASTRUCTURE_NAME")),
+				HaveField("Value", PointTo(Equal("test-infra"))),
+			),
+			SatisfyAll(
+				HaveField("Key", Equal("TLS_CIPHER_SUITES")),
+				HaveField("Value", PointTo(Equal("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"))),
+			),
+			SatisfyAll(
+				HaveField("Key", Equal("TLS_MIN_VERSION")),
+				HaveField("Value", PointTo(Equal("VersionTLS12"))),
+			),
+		))
 	}, defaultNodeTimeout)
 })
 
