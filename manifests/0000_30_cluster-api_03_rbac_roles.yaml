@@ -56,6 +56,8 @@ metadata:
   labels:
     cluster.x-k8s.io/aggregate-to-manager: "true"
   name: openshift-capi-manager-local-cluster
+# TODO(OCPCLOUD-1501): Remove this role after the equivalent OpenShift overlay
+# resource in openshift/cluster-api is available in the consumed manifests.
 rules:
 # CAPI normally uses a workload-cluster identity for Node access. On
 # OpenShift, ClusterCache detects the local cluster and switches to the
@@ -184,6 +186,8 @@ metadata:
     capability.openshift.io/name: ClusterAPI
   name: openshift-capi-kubeconfig-consumers
   namespace: openshift-cluster-api
+# TODO(OCPCLOUD-1501): Remove this role after the equivalent OpenShift overlay
+# resource in openshift/cluster-api is available in the consumed manifests.
 # CAPI ClusterCache uses the management kubeconfig to identify the local
 # controller Pod before switching to in-cluster configuration. Keep this
 # permission separate because projected tokens authenticate as each consumer's
